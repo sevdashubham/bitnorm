@@ -3,10 +3,13 @@ import './Header.css';
 import {connect} from "react-redux";
 import {userActions} from "../../store/actions";
 import {Link, withRouter} from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
 
 class Header extends Component {
 
     state = {
+        keyword: '',
+        isSearchOpen: false,
         headerList: ['Featured', 'Blogs', 'Bloggers', 'Search']
     };
 
@@ -15,7 +18,10 @@ class Header extends Component {
     handleCreateBlog = this.handleCreateBlog.bind(this);
     handleLoginRoute = this.handleLoginRoute.bind(this);
     handleSignupRoute = this.handleSignupRoute.bind(this);
-
+    handleSearchOpen = this.handleSearchOpen.bind(this);
+    handleSearchClose = this.handleSearchClose.bind(this);
+    onchangeInput = this.onchangeInput.bind(this);
+    handleSubmit = this.handleSubmit.bind(this);
 
     componentDidMount() {
 
@@ -39,6 +45,13 @@ class Header extends Component {
         }
     }
 
+    handleSearchOpen() {
+        this.setState({isSearchOpen: true});
+    }
+    handleSearchClose() {
+        this.setState({isSearchOpen: false});
+    }
+
     handleLoginRoute() {
         this.props.history.push('/login');
         this.props.login();
@@ -52,14 +65,23 @@ class Header extends Component {
         this.props.history.push('/create-blog')
     }
 
+    onchangeInput(e) {
+        this.setState({keyword: e.target.value});
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+    }
+
     render() {
-        const {headerList} = this.state;
+        const {headerList, isSearchOpen, keyword} = this.state;
         const {authenticated} = this.props;
         const {pathname} = this.props.location;
         const headerAnchor = headerList.map((item, index) => {
             return (
                 <Link to={this.handleLinkClick(item)}>
-                    <div style={styles.headerAnchorItems}>
+                    <div style={styles.headerAnchorItems} onClick={item === 'Search'? this.handleSearchOpen: this.handleSearchClose}>
                         <div className={`link ${pathname === this.handleLinkClick(item) ? `active` : ''}`}>
                             <div style={{marginBottom: 10}}>{item}</div>
                         </div>
@@ -69,6 +91,7 @@ class Header extends Component {
         });
 
         return (
+            <div>
             <div style={styles.headerContainer}>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center',}}>
                     <Link to={'/'}><span>
@@ -101,11 +124,27 @@ class Header extends Component {
                     <div onClick={this.handleSignupRoute} style={styles.authenticationRoutes}>sign up</div>
                 </div>}
             </div>
+                {isSearchOpen && <div style={styles.searchContainer}>
+                    <form onSubmit={this.handleSubmit}>
+                        <TextField
+                            id="standard-name"
+                            label="Search"
+                            value={keyword}
+                            onChange={this.onchangeInput}
+                            margin="dense"
+                        />
+                    </form>
+                </div>}
+            </div>
         )
     }
 }
 
 const styles = {
+    searchContainer: {
+        background: '#DEDEDE',
+        padding: 10
+    },
     headerContainer: {
         background: '#DEDEDE',
         display: 'flex',

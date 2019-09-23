@@ -9,7 +9,7 @@ export const userActions = {
 
 function login(email, password) {
     return dispatch => {
-        localStorage.setItem('authenticated', '1');
+        localStorage.setItem('bitNormToken', '1');
         dispatch(success());
 
         function success() {

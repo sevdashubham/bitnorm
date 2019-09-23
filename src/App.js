@@ -10,11 +10,12 @@ import Blogs from "./containers/Blogs/Blogs";
 import Bloggers from "./containers/Bloggers/Bloggers";
 import CreateBlogs from "./containers/CreateBlogs/CreateBlogs";
 import UserBlogs from "./containers/UserBlogs/UserBlogs";
+import PrivateRoute from "./_helpers/PrivateRoute";
 
 class App extends Component {
 
     componentDidMount() {
-        if (localStorage.getItem('authenticated') === '1') {
+        if (localStorage.getItem('bitNormToken') === '1') {
             this.props.isAuthenticated(true);
         } else {
             this.props.isAuthenticated(false);
@@ -30,8 +31,8 @@ class App extends Component {
                     <Route path="/featured" component={Featured}/>
                     <Route path="/blogs" component={Blogs}/>
                     <Route path="/bloggers" component={Bloggers}/>
-                    <Route path="/create-blog" component={CreateBlogs}/>
-                    <Route path="/user-blogs" component={UserBlogs}/>
+                    <PrivateRoute path="/create-blog" component={CreateBlogs}/>
+                    <PrivateRoute path="/user-blogs" component={UserBlogs}/>
                 </Router>
             </div>
         );
