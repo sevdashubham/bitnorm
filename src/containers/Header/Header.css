@@ -1,0 +1,8 @@
+.link {
+    border-bottom: 3px solid #DEDEDE;
+    padding: 10px 0 0 0;
+}
+
+.link:hover {
+    border-bottom: 3px solid #000000;
+}
