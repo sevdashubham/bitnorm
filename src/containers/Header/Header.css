@@ -1,8 +1,17 @@
 .link {
     border-bottom: 3px solid #DEDEDE;
     padding: 10px 0 0 0;
+    color: black;
+}
+
+.link:visited, :link, :active {
+    text-decoration: none;
 }
 
 .link:hover {
+    border-bottom: 3px solid #000000;
+}
+
+.active {
     border-bottom: 3px solid #000000;
 }

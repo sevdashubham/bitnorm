@@ -3,6 +3,9 @@ import './App.css';
 import Header from "./containers/Header/Header";
 import {userActions} from "./store/actions";
 import {connect} from "react-redux";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Home from "./containers/Home/Home";
+import Featured from "./containers/Featured/Featured";
 
 class App extends Component {
 
@@ -17,7 +20,12 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <Router>
                 <Header/>
+                    <Route exact path="/" component={Home} />
+                    <Route path="/featured" component={Featured} />
+                    {/*<Route path="/topics" component={Topics} />*/}
+                </Router>
             </div>
         );
     }

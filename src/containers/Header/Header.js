@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './Header.css';
 import {connect} from "react-redux";
 import {userActions} from "../../store/actions";
+import {Link, withRouter} from 'react-router-dom';
 
 class Header extends Component {
 
@@ -11,6 +12,8 @@ class Header extends Component {
 
     handleLogin = this.handleLogin.bind(this);
     handleLogout = this.handleLogout.bind(this);
+    handleLinkClick = this.handleLinkClick.bind(this);
+    handleCreateBlog = this.handleCreateBlog.bind(this);
 
 
     componentDidMount() {
@@ -25,31 +28,49 @@ class Header extends Component {
         this.props.logout();
     }
 
+    handleLinkClick(name) {
+        switch (name) {
+            case 'Featured':
+                return '/featured';
+            case 'Blogs':
+                return '/blogs';
+             case 'Bloggers':
+                return '/bloggers';
+            default:
+                return;
+        }
+    }
+
+    handleCreateBlog() {
+        this.props.history.push('/create-blog')
+    }
+
     render() {
         const {headerList} = this.state;
         const {authenticated} = this.props;
+        const {pathname} = this.props.location;
         const headerAnchor = headerList.map((item, index) => {
            return (
-               <div style={styles.headerAnchorItems}>
-                   <div className="link">
+               <Link to={this.handleLinkClick(item)}><div style={styles.headerAnchorItems}>
+                   <div className={`link ${pathname === this.handleLinkClick(item)? `active`: ''}`}>
                        <div style={{marginBottom: 10}}>{item}</div></div>
-               </div>
+               </div></Link>
            )
         });
 
         return (
             <div style={styles.headerContainer}>
                 <div style={{display: 'flex', flexDirection: 'row',  alignItems: 'center',}}>
-                    <span>
+                    <Link to={'/'}><span>
                         LOGO
-                    </span>
+                    </span></Link>
                     <div style={styles.headerAnchorContainer}>
                         {headerAnchor}
                     </div>
                 </div>
                 {authenticated ? <div style={styles.blogContainer}>
                     <div style={styles.headerRightAnchors}>
-                        <div className="link">
+                        <div className="link" onClick={this.handleCreateBlog}>
                             <div style={{marginBottom: 10}}>Create a Blog</div>
                         </div>
                     </div>
@@ -126,4 +147,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Header);
+)(withRouter(Header));
