@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import './Header.css';
+import {connect} from "react-redux";
+import {userActions} from "../../store/actions";
 
 class Header extends Component {
 
@@ -7,13 +9,25 @@ class Header extends Component {
       headerList:['Featured', 'Blogs', 'Bloggers', 'Search']
     };
 
+    handleLogin = this.handleLogin.bind(this);
+    handleLogout = this.handleLogout.bind(this);
+
+
     componentDidMount() {
 
     }
 
+    handleLogin() {
+        this.props.login();
+    }
+
+    handleLogout() {
+        this.props.logout();
+    }
+
     render() {
         const {headerList} = this.state;
-
+        const {authenticated} = this.props;
         const headerAnchor = headerList.map((item, index) => {
            return (
                <div style={styles.headerAnchorItems}>
@@ -33,7 +47,7 @@ class Header extends Component {
                         {headerAnchor}
                     </div>
                 </div>
-                <div style={styles.blogContainer}>
+                {authenticated ? <div style={styles.blogContainer}>
                     <div style={styles.headerRightAnchors}>
                         <div className="link">
                             <div style={{marginBottom: 10}}>Create a Blog</div>
@@ -44,9 +58,10 @@ class Header extends Component {
                             <div style={{marginBottom: 10}}>Your Blogs</div>
                         </div>
                     </div>
-                   <div style={styles.avatar}/>
-
-                </div>
+                   <div onClick={this.handleLogout} style={styles.avatar}/>
+                </div>:<div onClick={this.handleLogin}>
+                    Login
+                </div>}
             </div>
         )
     }
@@ -94,5 +109,21 @@ const styles= {
 
 };
 
+const mapStateToProps = state => {
+    const {authenticated} = state.user;
+    return {
+        authenticated
+    };
+};
 
-export default Header;
+const mapDispatchToProps = dispatch => ({
+    login: () => dispatch(userActions.login()),
+    logout: () => dispatch(userActions.logout()),
+});
+
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Header);
