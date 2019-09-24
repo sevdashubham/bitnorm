@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import './App.css';
+import './App.scss';
 import Header from "./containers/Header/Header";
 import {userActions} from "./store/actions";
 import {connect} from "react-redux";
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import Home from "./containers/Home/Home";
 import Featured from "./containers/Featured/Featured";
 import Blogs from "./containers/Blogs/Blogs";

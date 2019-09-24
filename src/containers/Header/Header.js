@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import './Header.css';
+import './Header.scss';
 import {connect} from "react-redux";
 import {userActions} from "../../store/actions";
 import {Link, withRouter} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import KeyboardBackspaceOutlined from '@material-ui/icons/KeyboardBackspaceOutlined';
+import SearchOutlined from '@material-ui/icons/SearchOutlined';
+import CloseOutlined from '@material-ui/icons/CloseOutlined';
+import {withStyles} from '@material-ui/styles';
 
 class Header extends Component {
 
@@ -40,14 +45,14 @@ class Header extends Component {
             case 'Bloggers':
                 return '/bloggers';
             default:
-                return;
-
+                return '';
         }
     }
 
     handleSearchOpen() {
         this.setState({isSearchOpen: true});
     }
+
     handleSearchClose() {
         this.setState({isSearchOpen: false});
     }
@@ -71,19 +76,27 @@ class Header extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        const {keyword} = this.state;
+        if (keyword) {
+            this.searchBlogs(keyword);
+        }
+    }
 
+    searchBlogs(keyword) {
+        console.log('search performed for keyword', keyword);
     }
 
     render() {
         const {headerList, isSearchOpen, keyword} = this.state;
-        const {authenticated} = this.props;
+        const {authenticated, classes} = this.props;
         const {pathname} = this.props.location;
         const headerAnchor = headerList.map((item, index) => {
             return (
-                <Link to={this.handleLinkClick(item)}>
-                    <div style={styles.headerAnchorItems} onClick={item === 'Search'? this.handleSearchOpen: this.handleSearchClose}>
+                <Link to={this.handleLinkClick(item)} key={index}>
+                    <div style={styles.headerAnchorItems}
+                         onClick={item === 'Search' ? this.handleSearchOpen : this.handleSearchClose}>
                         <div className={`link ${pathname === this.handleLinkClick(item) ? `active` : ''}`}>
-                            <div style={{marginBottom: 10}}>{item}</div>
+                            <div style={styles.bottomMargin10}>{item}</div>
                         </div>
                     </div>
                 </Link>
@@ -92,49 +105,69 @@ class Header extends Component {
 
         return (
             <div>
-            <div style={styles.headerContainer}>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center',}}>
-                    <Link to={'/'}><span>
+                <div style={styles.headerContainer}>
+                    <div style={styles.logoContainer}>
+                        <Link to={'/'}><span>
                         LOGO
                     </span></Link>
-                    <div style={styles.headerAnchorContainer}>
-                        {headerAnchor}
+                        <div style={styles.headerAnchorContainer}>
+                            {headerAnchor}
+                            {isSearchOpen && <div style={styles.searchContainer}>
+                                <form onSubmit={this.handleSubmit}>
+                                    <TextField
+                                        fullWidth
+                                        inputProps={{
+                                            style: {padding: 5},
+                                        }}
+                                        className={classes.textField}
+                                        variant="outlined"
+                                        id="standard-name"
+                                        value={keyword}
+                                        onChange={this.onchangeInput}
+                                        margin="dense"
+                                        placeholder={'Search blogs...'}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <KeyboardBackspaceOutlined style={styles.cursorPointer}
+                                                        onClick={() => this.setState({isSearchOpen: false})}/>
+                                                </InputAdornment>
+                                            ), endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {keyword &&
+                                                    <CloseOutlined style={styles.cursorPointer} onClick={() => this.setState({keyword: ''})}/>}
+                                                    <SearchOutlined style={styles.cursorPointer} onClick={this.handleSubmit}/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </form>
+                            </div>}
+                        </div>
                     </div>
+                    {authenticated ? <div style={styles.blogContainer}>
+                        <Link to={'create-blog'}>
+                            <div style={styles.headerRightAnchors}>
+                                <div className="link">
+                                    <div style={styles.bottomMargin10}>Create a Blog</div>
+                                </div>
+                            </div>
+                        </Link>
+                        <Link to={'user-blogs'}>
+                            <div style={styles.headerRightAnchors}>
+                                <div className="link">
+                                    <div style={styles.bottomMargin10}>Your Blogs</div>
+                                </div>
+                            </div>
+                        </Link>
+                        <div onClick={this.handleLogout} style={styles.avatar}/>
+                    </div> : <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <div onClick={this.handleLoginRoute} style={styles.authenticationRoutes}>
+                            Login
+                        </div>
+                        <div onClick={this.handleSignupRoute} style={styles.authenticationRoutes}>sign up</div>
+                    </div>}
                 </div>
-                {authenticated ? <div style={styles.blogContainer}>
-                    <Link to={'create-blog'}>
-                    <div style={styles.headerRightAnchors}>
-                        <div className="link">
-                            <div style={{marginBottom: 10}}>Create a Blog</div>
-                        </div>
-                    </div>
-                    </Link>
-                    <Link to={'user-blogs'}>
-                    <div style={styles.headerRightAnchors}>
-                        <div className="link">
-                            <div style={{marginBottom: 10}}>Your Blogs</div>
-                        </div>
-                    </div>
-                    </Link>
-                    <div onClick={this.handleLogout} style={styles.avatar}/>
-                </div> : <div style={{display: 'flex', flexDirection: 'row'}}>
-                    <div onClick={this.handleLoginRoute} style={styles.authenticationRoutes}>
-                        Login
-                    </div>
-                    <div onClick={this.handleSignupRoute} style={styles.authenticationRoutes}>sign up</div>
-                </div>}
-            </div>
-                {isSearchOpen && <div style={styles.searchContainer}>
-                    <form onSubmit={this.handleSubmit}>
-                        <TextField
-                            id="standard-name"
-                            label="Search"
-                            value={keyword}
-                            onChange={this.onchangeInput}
-                            margin="dense"
-                        />
-                    </form>
-                </div>}
             </div>
         )
     }
@@ -142,8 +175,9 @@ class Header extends Component {
 
 const styles = {
     searchContainer: {
-        background: '#DEDEDE',
-        padding: 10
+        width: '100%',
+        maxWidth: 600,
+        background: '#DEDEDE'
     },
     headerContainer: {
         background: '#DEDEDE',
@@ -157,7 +191,8 @@ const styles = {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: '0 10px'
+        padding: '0 10px',
+        width: '100%'
     },
     headerAnchorItems: {
         padding: '0 20px'
@@ -167,8 +202,8 @@ const styles = {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: '0 10px'
-
+        padding: '0 10px',
+        flexGrow: 0,
     },
     headerRightAnchors: {
         padding: '0 10px'
@@ -186,8 +221,24 @@ const styles = {
     authenticationRoutes: {
         cursor: 'pointer',
         padding: '0 10px'
+    },
+    bottomMargin10: {
+        marginBottom: 10
+    },
+    logoContainer: {
+        flexGrow: 4,
+        display: 'flex', flexDirection: 'row', alignItems: 'center'
+    },
+    cursorPointer: {
+        cursor: 'pointer'
     }
+};
 
+const stylesHeader = {
+    textField: {
+        marginTop: 3,
+        fontWeight: 500
+    }
 };
 
 const mapStateToProps = state => {
@@ -206,4 +257,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withRouter(Header));
+)(withRouter(withStyles(stylesHeader)(Header)));
