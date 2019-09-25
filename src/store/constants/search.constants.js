@@ -1,0 +1,4 @@
+export const searchConstants = {
+    SEARCH_DATA_SUCCESS: 'SEARCH_DATA_SUCCESS',
+    SEARCH_DATA_FAILURE: 'SEARCH_DATA_FAILURE'
+};
