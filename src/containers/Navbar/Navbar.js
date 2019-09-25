@@ -146,14 +146,14 @@ class Navbar extends Component {
                     {authenticated ? <div className={classes.blogContainer}>
                         <Link to={'/create-blog'}>
                             <div className={classes.headerRightAnchors}>
-                                <div className={classes.link}>
+                                <div className={pathname === '/create-blog' ? classes.linkActive : classes.link}>
                                     <div className={classes.bottomMargin10}>Create a Blog</div>
                                 </div>
                             </div>
                         </Link>
                         <Link to={'/user-blogs'}>
                             <div className={classes.headerRightAnchors}>
-                                <div className={classes.link}>
+                                <div className={pathname === '/user-blogs' ? classes.linkActive : classes.link}>
                                     <div className={classes.bottomMargin10}>Your Blogs</div>
                                 </div>
                             </div>
