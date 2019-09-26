@@ -1,10 +1,12 @@
 import {combineReducers} from 'redux'
 import {user} from "./user.reducer";
 import {search} from "./search.reducer";
+import {blog} from './blog.reducer';
 
 const appReducer = combineReducers({
     user,
-    search
+    search,
+    blog
 });
 
 const rootReducer = (state, action) => {
