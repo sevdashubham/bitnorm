@@ -28,15 +28,16 @@ class BlogPage extends Component {
         if(Object.keys(data).length === 0 && data.constructor === Object ) {
             return (
                 <div>
-                    No blog found for this ID
+                    404: No blog found for this ID
                 </div>
             )
         }
 
         return (
             <div>
-                <h2>{data.name? data.name: ''}</h2>
+                <h2>{data.title? data.title: ''}</h2>
                 <h5>{data.description? data.description: ''}</h5>
+                <h5>{data.currencyType? data.currencyType: ''}</h5>
             </div>
         )
     }

@@ -12,6 +12,7 @@ import CreateBlogs from "./containers/CreateBlogs/CreateBlogs";
 import UserBlogs from "./containers/UserBlogs/UserBlogs";
 import PrivateRoute from "./_helpers/PrivateRoute";
 import EditBlog from "./containers/EditBlog/EditBlog";
+import BlogPage from "./containers/BlogPage/BlogPage";
 
 class App extends Component {
 
@@ -35,6 +36,7 @@ class App extends Component {
                     <PrivateRoute path="/create-blog" component={CreateBlogs}/>
                     <PrivateRoute path="/user-blogs" component={UserBlogs}/>
                     <PrivateRoute path="/edit-blog/:blogID" component={EditBlog}/>
+                    <PrivateRoute path="/blog/:blogID" component={BlogPage}/>
                 </Router>
             </div>
         );

@@ -1,9 +1,9 @@
 import {blogConstants} from '../constants/blog.constants';
 
-export function blog(state = {data: {}, errorBlog: '', isFetchingBlog: false, successMessageBlog: ''}, action) {
+export function blog(state = {data: {}, errorBlog: '', isFetchingBlog: false, successMessageBlog: '', page: 0}, action) {
     switch (action.type) {
         case blogConstants.FETCH_BLOG_BY_ID_SUCCESS:
-            return {...state, data: action.payload};
+            return {...state, data: action.payload, page: state.page + 1};
         case blogConstants.FETCH_BLOG_BY_ID_FAILURE:
             return {...state, errorBlog: action.payload};
         case blogConstants.UPDATE_BLOG_SUCCESS:
